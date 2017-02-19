@@ -17,8 +17,6 @@ import org.apache.log4j.Logger;
 
 import com.contribe.enums.Status;
 import com.contribe.model.Book;
-import com.contribe.model.Cart;
-import com.contribe.model.CartImpl;
 
 /**
  * Store implementation for Books
@@ -33,10 +31,10 @@ public class StoreHandler implements BookList {
 	// This map stores books and also number of books
 	private static Map<Book, Integer> booksInStore = new HashMap<Book, Integer>();
 
-	private Cart cart;
+	private CartService cartService;
 
 	public StoreHandler() {
-		cart = new CartImpl();
+		cartService = new CartServieImpl();
 	}
 
 	/**
@@ -90,7 +88,7 @@ public class StoreHandler implements BookList {
 		Map<Book, Status> result = new HashMap<Book, Status>();
 
 		// Books to be bought are maintained in the cart
-		Map<Book, Integer> booksInCart = cart.getBooksInCart();
+		Map<Book, Integer> booksInCart = cartService.getBooksInCart();
 
 		BigDecimal totalPrice = BigDecimal.ZERO;
 		for (Book book : booksInCart.keySet()) {
@@ -134,7 +132,7 @@ public class StoreHandler implements BookList {
 
 		logger.info("Total price for the books purchased is " + totalPrice);
 		// Clear the contents of the cart at this stage
-		cart.getBooksInCart().clear();
+		cartService.getBooksInCart().clear();
 		return result;
 	}
 
@@ -153,12 +151,12 @@ public class StoreHandler implements BookList {
 
 	@Override
 	public void addToCart(final Book book, final int quantity) {
-		cart.add(book, quantity);
+		cartService.addToCart(book, quantity);
 	}
 
 	@Override
 	public void removeFromCart(final Book book, final int quantity) {
-		cart.remove(book, quantity);
+		cartService.removeFromCart(book, quantity);
 	}
 
 	public static Map<Book, Integer> getBooksInStore() {

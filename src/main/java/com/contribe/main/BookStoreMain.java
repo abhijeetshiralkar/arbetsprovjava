@@ -22,8 +22,10 @@ public class BookStoreMain {
 
 		final Logger log = Logger.getLogger(BookStoreMain.class);
 
-		// Create instance of StoreHandler. The StoreHandler would also create a
-		// cart. We would add books to the cart and finally checkout the cart in
+		// Create instance of StoreHandler. The StoreHandler would also create
+		// instance of cartservice. We would add books to the cart and finally
+		// checkout the
+		// cart in
 		// buy method
 		final BookList storeHandler = new StoreHandler();
 
