@@ -76,7 +76,7 @@ public class StoreHandler implements BookList {
 		if (existingBookCount != null) {
 			booksInStore.put(book, existingBookCount + quantity);
 		} else {
-			booksInStore.put(book, 1);
+			booksInStore.put(book, quantity);
 		}
 
 		return true;
