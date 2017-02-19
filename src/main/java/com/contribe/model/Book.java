@@ -14,6 +14,13 @@ public class Book {
 	private String author;
 	private BigDecimal price;
 
+	public Book(String title, String author, BigDecimal price) {
+		super();
+		this.title = title;
+		this.author = author;
+		this.price = price;
+	}
+
 	public String getTitle() {
 		return title;
 	}

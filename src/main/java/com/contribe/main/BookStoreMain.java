@@ -22,11 +22,12 @@ public class BookStoreMain {
 
 		final Logger log = Logger.getLogger(BookStoreMain.class);
 
-		// There would be single instance of StoreHandler ever created as it is
-		// singleton
+		// Create instance of StoreHandler. The StoreHandler would also create a
+		// cart. We would add books to the cart and finally checkout the cart in
+		// buy method
 		final BookList storeHandler = new StoreHandler();
 
-		// Look for books
+		// Look for books based on the author
 		Book[] books = storeHandler.list("Cunning Bastard");
 		books = ArrayUtils.addAll(books, storeHandler.list("First Author"));
 
@@ -38,6 +39,7 @@ public class BookStoreMain {
 		// Now do the checkout
 		final Map<Book, Status> bookCheckoutStatus = storeHandler.buy();
 
+		// The status for the book purchase is as below
 		bookCheckoutStatus.forEach((book, status) -> {
 			log.info("Status of book purchase for " + book.getTitle() + " is: " + status);
 		});

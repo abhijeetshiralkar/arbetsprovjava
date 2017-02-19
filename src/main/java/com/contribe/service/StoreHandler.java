@@ -50,21 +50,25 @@ public class StoreHandler implements BookList {
 					new InputStreamReader(url.openConnection().getInputStream()));
 			bufferedReader.lines().forEach(bookInputString -> {
 				final String[] bookInput = bookInputString.split(";");
-				final Book book = new Book();
-				book.setTitle(bookInput[0]);
-				book.setAuthor(bookInput[1]);
 
-				final String price = bookInput[2];
-				if (StringUtils.isNotEmpty(price)) {
-					book.setPrice(new BigDecimal(price.replaceAll(",", "")));
+				BigDecimal price = BigDecimal.ZERO;
+
+				if (StringUtils.isNotEmpty(bookInput[2])) {
+					price = BigDecimal.valueOf(Double.parseDouble(bookInput[2].replaceAll(",", "")));
 				}
+
+				final Book book = new Book(bookInput[0], bookInput[1], price);
 
 				booksInStore.put(book, Integer.parseInt(bookInput[3]));
 			});
 		} catch (MalformedURLException e) {
 			logger.warn("Could not get the initial book store data", e);
+			// No use in proceeding if we dont have the data
+			System.exit(1);
 		} catch (IOException e) {
 			logger.warn("Could not get the initial book store data", e);
+			// No use in proceeding if we dont have the data
+			System.exit(1);
 		}
 	}
 
@@ -81,7 +85,7 @@ public class StoreHandler implements BookList {
 	}
 
 	@Override
-	public synchronized Map<Book, Status> buy() {
+	public Map<Book, Status> buy() {
 		// Map of result
 		Map<Book, Status> result = new HashMap<Book, Status>();
 
