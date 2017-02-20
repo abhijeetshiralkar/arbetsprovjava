@@ -71,7 +71,7 @@ public class StoreHandler implements BookList {
 	}
 
 	@Override
-	public boolean add(final Book book, final int quantity) {
+	public synchronized boolean add(final Book book, final int quantity) {
 		final Integer existingBookCount = booksInStore.get(book);
 		if (existingBookCount != null) {
 			booksInStore.put(book, existingBookCount + quantity);
@@ -83,7 +83,7 @@ public class StoreHandler implements BookList {
 	}
 
 	@Override
-	public Map<Book, Status> buy() {
+	public synchronized Map<Book, Status> buy() {
 		// Map of result
 		Map<Book, Status> result = new HashMap<Book, Status>();
 
@@ -137,7 +137,7 @@ public class StoreHandler implements BookList {
 	}
 
 	@Override
-	public Book[] list(final String searchString) {
+	public synchronized Book[] list(final String searchString) {
 		Set<Book> books = new HashSet<Book>();
 
 		if (StringUtils.isEmpty(searchString)) {
@@ -150,12 +150,12 @@ public class StoreHandler implements BookList {
 	}
 
 	@Override
-	public void addToCart(final Book book, final int quantity) {
+	public synchronized void addToCart(final Book book, final int quantity) {
 		cartService.addToCart(book, quantity);
 	}
 
 	@Override
-	public void removeFromCart(final Book book, final int quantity) {
+	public synchronized void removeFromCart(final Book book, final int quantity) {
 		cartService.removeFromCart(book, quantity);
 	}
 
