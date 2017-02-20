@@ -38,12 +38,19 @@ public class BookStoreMain {
 			storeHandler.addToCart(book, 10);
 		}
 
-		// Now do the checkout
+		// Try removing a few books from the cart
+		for (Book book : books) {
+			storeHandler.removeFromCart(book, 3);
+		}
+
+		// Now do the checkout.
+		// Check the log output for checkout status
 		final Map<Book, Status> bookCheckoutStatus = storeHandler.buy();
 
 		// The status for the book purchase is as below
 		bookCheckoutStatus.forEach((book, status) -> {
-			log.info("Status of book purchase for " + book.getTitle() + " is: " + status);
+			log.info(String.format("Status of book purchase for [%s::%s::%.2f] is: %s ", book.getTitle(),
+					book.getAuthor(), book.getPrice(), status));
 		});
 
 	}

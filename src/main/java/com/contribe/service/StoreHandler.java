@@ -92,16 +92,20 @@ public class StoreHandler implements BookList {
 
 		BigDecimal totalPrice = BigDecimal.ZERO;
 		for (Book book : booksInCart.keySet()) {
+			final Integer quantityOfBook = booksInCart.get(book);
 			// If the bookStore doesn't contain the book
 			if (!booksInStore.containsKey(book)) {
 				result.put(book, Status.DOES_NOT_EXIST);
-				logger.info("Purchase for book " + book.getTitle()
-						+ " was not successful as book does not exist in book store");
+				logger.info(String.format(
+						"Purchase for %d books with details: [%s :: %s :: %.2f] was not successful as book does not exist in book store",
+						quantityOfBook, book.getTitle(), book.getAuthor(), book.getPrice()));
 				continue;
 			}
 			// If bookstore contains the book but is out of stock
 			if (booksInStore.containsKey(book) && booksInCart.get(book) > booksInStore.get(book)) {
-				logger.info("Purchase for book " + book.getTitle() + " was not successful as book is out of stock");
+				logger.info(String.format(
+						"Purchase for %d books with details: [%s :: %s :: %.2f] was not successful as book is out of stock",
+						quantityOfBook, book.getTitle(), book.getAuthor(), book.getPrice()));
 				result.put(book, Status.NOT_IN_STOCK);
 				continue;
 			}
@@ -109,12 +113,13 @@ public class StoreHandler implements BookList {
 			// If bookstore contains the book and is in stock
 			if (booksInStore.containsKey(book) && booksInCart.get(book) <= booksInStore.get(book)) {
 				result.put(book, Status.OK);
-				final Integer quantityOfBook = booksInCart.get(book);
-				final BigDecimal price = book.getPrice().multiply(BigDecimal.valueOf(quantityOfBook));
-				totalPrice = totalPrice.add(price);
+				// Price for multiple copies of this book
+				final BigDecimal bookTotalPrice = book.getPrice().multiply(BigDecimal.valueOf(quantityOfBook));
+				totalPrice = totalPrice.add(bookTotalPrice);
 
-				logger.info("Purchase for book " + book.getTitle() + " is successful. The price of these books is: "
-						+ price);
+				logger.info(String.format(
+						"Purchase for %d books with details: [%s :: %s :: %.2f] is successful. Total price of this book is: %.2f",
+						quantityOfBook, book.getTitle(), book.getAuthor(), book.getPrice(), bookTotalPrice));
 
 				// Update the books in store now that the checkout/buy was
 				// successful
@@ -130,7 +135,7 @@ public class StoreHandler implements BookList {
 			}
 		}
 
-		logger.info("Total price for the books purchased is " + totalPrice);
+		logger.info(String.format("Total price for the books purchased is %.2f", totalPrice));
 		// Clear the contents of the cart at this stage
 		cartService.getBooksInCart().clear();
 		return result;
